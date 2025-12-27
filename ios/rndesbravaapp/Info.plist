@@ -36,6 +36,26 @@
 	<key>UILaunchStoryboardName</key>
 	<string>SplashScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
+	//Código omitido
+
+	<key>NSCameraUsageDescription</key>
+	<string>Allow DesbravaApp to use the camera</string>
+
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Allow DesbravaApp to use the microphone</string>
+
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Allow DesbravaApp to use your location</string>
+
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Allow DesbravaApp to use your location</string>
+
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Allow DesbravaApp to use your location</string>
+	<key>UILaunchStoryboardName</key>
+	<string>SplashScreen</string>
+
+	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>arm64</string>
 	</array>
