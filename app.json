@@ -4,7 +4,7 @@
     "slug": "rn-desbrava-app",
     "version": "1.0.0",
     "plugins": [
-      "expo-localization"
+      "expo-maps"
     ]
   }
 }
