@@ -2,9 +2,6 @@
   "expo": {
     "name": "rn-desbrava-app",
     "slug": "rn-desbrava-app",
-    "version": "1.0.0",
-    "plugins": [
-      "expo-maps"
-    ]
+    "version": "1.0.0"
   }
 }
