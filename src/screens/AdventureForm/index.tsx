@@ -22,7 +22,7 @@ import * as Location from 'expo-location';
 
 const AdventureForm = () => {
 	const navigation = useNavigation<RootStackNavigationProp>();
-	const [cameraPermission, cameraRequestPermission] = useCameraPermissions();
+	const [cameraPermission, requestCameraPermission] = useCameraPermissions();
 	const [locationPermission, requestLocationPermission] = Location.useForegroundPermissions();
 	const cameraRef = useRef<CameraView>(null);
 	const [isCameraActive, setIsCameraActive] = useState(false);
@@ -62,13 +62,16 @@ const AdventureForm = () => {
 				});
 				const address = await Location.reverseGeocodeAsync({ latitude, longitude });
 				if (address.length > 0) {
-					const locationName = `${address[0].street}, ${address[0].city}, ${address[0].region}`;
+					const locationName =
+						Platform.OS === 'android'
+							? address[0].formattedAddress
+							: `${address[0].street}, ${address[0].city}, ${address[0].region}`;
 					setSelectedLocation({
 						latitude,
 						longitude,
 						address: locationName,
 					});
-					setForm({ ...form, location: locationName });
+					setForm({ ...form, location: { address: locationName, latitude, longitude } });
 				}
 			}
 		} catch (error) {
@@ -94,15 +97,13 @@ const AdventureForm = () => {
 
 	useEffect(() => {
 		if (!!cameraPermission && !cameraPermission.granted) {
-			cameraRequestPermission();
+			requestCameraPermission();
 		}
 		if (!!locationPermission && !locationPermission.granted) {
 			requestLocationPermission();
 		}
 	}, [cameraPermission, locationPermission]);
 
-
-	//acesso a configurações da câmera do dispositivo
 	const handleAddImage = () => {
 		if (!!cameraPermission && cameraPermission.status === 'denied') {
 			return Alert.alert(
@@ -117,7 +118,6 @@ const AdventureForm = () => {
 		return setIsCameraActive(true);
 	};
 
-	// acesso a configurações de localização do dispositivo
 	const handleAddLocation = () => {
 		if (!!locationPermission && locationPermission.status === 'denied') {
 			return Alert.alert(
@@ -129,6 +129,7 @@ const AdventureForm = () => {
 				]
 			);
 		}
+		return setIsMapViewActive(true);
 	};
 
 	const CameraComponent = () => (
@@ -181,7 +182,6 @@ const AdventureForm = () => {
 				provider={Platform.OS === 'android' ? 'google' : undefined}
 				style={{ flex: 1, width: '100%' }}
 				region={region}
-				onRegionChangeComplete={setRegion}
 				onDoublePress={(event) => {
 					const { latitude, longitude } = event.nativeEvent.coordinate;
 					setRegion({
@@ -283,14 +283,11 @@ const AdventureForm = () => {
 					right={<TextInput.Icon icon='calendar' />}
 					keyboardType='email-address'
 				/>
-				<TouchableOpacity
-					onPress={handleAddLocation}
-					style={{ height: 80, zIndex: 10 }}
-				>
+				<TouchableOpacity onPress={handleAddLocation} style={{ height: 80, zIndex: 10 }}>
 					<TextInput
 						label='Localização'
 						placeholder='Adicionar uma localização'
-						value={form.location}
+						value={form.location?.address}
 						style={{ backgroundColor: colors.surface, marginTop: 16 }}
 						mode='outlined'
 						multiline
